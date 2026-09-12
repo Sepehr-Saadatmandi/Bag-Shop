@@ -39,6 +39,7 @@ export interface SiteConfig {
   logoType: 'text' | 'icon' | 'image';
   logoIcon: string;
   logoColor: string;
+  showAnnouncement: boolean;
   announcement: string;
   footerText: string;
   pageTitle: string;
@@ -81,6 +82,7 @@ const defaultSiteConfig: SiteConfig = {
   logoType: 'icon',
   logoIcon: 'M',
   logoColor: '#000000',
+  showAnnouncement: true,
   announcement: 'Now shipping worldwide — Complimentary express delivery on orders over $500',
   footerText: '© 2026 Maison Élan. All rights reserved.',
   pageTitle: 'Maison Élan — Luxury Bags',
