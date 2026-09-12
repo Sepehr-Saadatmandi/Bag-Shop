@@ -40,6 +40,18 @@ export default function App() {
     return () => window.removeEventListener('hashchange', checkHash);
   }, []);
 
+  // Keyboard shortcut: Ctrl+Shift+A to open admin
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+        e.preventDefault();
+        window.location.hash = '#/admin';
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   // If admin is logged in and showAdmin is true, show dashboard
   // If showAdmin is true but not logged in, show login
   if (showAdmin) {
@@ -291,17 +303,24 @@ export default function App() {
         onAddToCart={handleAddToCart}
       />
 
-      {/* Admin floating button - only show when logged in */}
-      {isAdmin && (
-        <button
-          onClick={() => {
-            window.location.hash = '#/admin';
-          }}
-          className="fixed bottom-6 right-6 bg-black text-white px-4 py-2 text-xs tracking-widest uppercase hover:bg-gray-900 transition-colors z-40 shadow-lg cursor-pointer"
-        >
-          Admin Panel
-        </button>
-      )}
+      {/* Admin floating button - always visible for easy access */}
+      <button
+        onClick={() => {
+          window.location.hash = '#/admin';
+        }}
+        className={`fixed bottom-6 right-6 px-4 py-3 text-xs tracking-widest uppercase transition-all z-40 shadow-lg cursor-pointer flex items-center gap-2 ${
+          isAdmin
+            ? 'bg-black text-white hover:bg-gray-900'
+            : 'bg-white text-black border border-gray-200 hover:border-black'
+        }`}
+        title="Click to access Admin Panel"
+      >
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        {isAdmin ? 'Admin Panel' : 'Admin Login'}
+      </button>
     </div>
   );
 }
