@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useContent } from '../context/ContentContext';
+import { PageContent } from '../context/ContentContext';
 
 interface HeaderProps {
   onCartOpen: () => void;
@@ -6,16 +8,26 @@ interface HeaderProps {
   cartCount: number;
   currentPage: string;
   onNavigate: (page: string) => void;
+  pages?: PageContent[];
 }
 
-export default function Header({ onCartOpen, onSearchOpen, cartCount, currentPage, onNavigate }: HeaderProps) {
+export default function Header({ onCartOpen, onSearchOpen, cartCount, currentPage, onNavigate, pages }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { siteConfig } = useContent();
+
+  // Use provided pages or default navigation
+  const navItems = pages || [
+    { id: 'shop', title: 'Shop', slug: 'shop' },
+    { id: 'new', title: 'New Arrivals', slug: 'new' },
+    { id: 'collections', title: 'Collections', slug: 'collections' },
+    { id: 'about', title: 'About', slug: 'about' },
+  ];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
       {/* Announcement bar */}
       <div className="bg-black text-white text-center py-2 text-xs tracking-widest uppercase">
-        Now shipping worldwide — Complimentary express delivery on orders over $500
+        {siteConfig.announcement}
       </div>
 
       {/* Main header */}
@@ -37,17 +49,17 @@ export default function Header({ onCartOpen, onSearchOpen, cartCount, currentPag
 
           {/* Navigation - Desktop */}
           <nav className="hidden lg:flex items-center space-x-8">
-            {['Shop', 'New Arrivals', 'Collections', 'About'].map((item) => (
+            {navItems.map((item) => (
               <button
-                key={item}
-                onClick={() => onNavigate(item === 'Shop' ? 'shop' : item === 'New Arrivals' ? 'new' : item === 'Collections' ? 'collections' : 'about')}
+                key={item.id}
+                onClick={() => onNavigate(item.slug)}
                 className={`text-xs tracking-widest uppercase hover:opacity-60 transition-opacity ${
-                  currentPage === (item === 'Shop' ? 'shop' : item === 'New Arrivals' ? 'new' : item === 'Collections' ? 'collections' : 'about')
+                  currentPage === item.slug
                     ? 'border-b border-black pb-0.5'
                     : ''
                 }`}
               >
-                {item}
+                {item.title}
               </button>
             ))}
           </nav>
@@ -58,7 +70,7 @@ export default function Header({ onCartOpen, onSearchOpen, cartCount, currentPag
             className="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 lg:mx-auto"
           >
             <h1 className="text-xl lg:text-2xl tracking-[0.3em] uppercase font-light">
-              Maison Élan
+              {siteConfig.siteName}
             </h1>
           </button>
 
@@ -92,16 +104,16 @@ export default function Header({ onCartOpen, onSearchOpen, cartCount, currentPag
       {mobileMenuOpen && (
         <div className="lg:hidden bg-white border-t border-gray-100 py-6 px-6">
           <nav className="flex flex-col space-y-4">
-            {['Shop', 'New Arrivals', 'Collections', 'About'].map((item) => (
+            {navItems.map((item) => (
               <button
-                key={item}
+                key={item.id}
                 onClick={() => {
-                  onNavigate(item === 'Shop' ? 'shop' : item === 'New Arrivals' ? 'new' : item === 'Collections' ? 'collections' : 'about');
+                  onNavigate(item.slug);
                   setMobileMenuOpen(false);
                 }}
                 className="text-sm tracking-widest uppercase text-left hover:opacity-60 transition-opacity"
               >
-                {item}
+                {item.title}
               </button>
             ))}
           </nav>

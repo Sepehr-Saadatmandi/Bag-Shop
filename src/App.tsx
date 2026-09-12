@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAdmin } from './context/AdminContext';
+import { useContent } from './context/ContentContext';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import ProductGrid from './components/ProductGrid';
@@ -8,6 +10,8 @@ import Search from './components/Search';
 import Newsletter from './components/Newsletter';
 import Footer from './components/Footer';
 import FeaturedSection from './components/FeaturedSection';
+import AdminLogin from './components/admin/AdminLogin';
+import AdminDashboard from './components/admin/AdminDashboard';
 import { Product } from './data/products';
 
 export default function App() {
@@ -16,7 +20,44 @@ export default function App() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [view, setView] = useState<'site' | 'admin-login' | 'admin-dashboard'>('site');
+  const { isAdmin } = useAdmin();
+  const { pages, siteConfig, theme } = useContent();
 
+  // Handle routing
+  useEffect(() => {
+    const handleRoute = () => {
+      const hash = window.location.hash;
+      if (hash === '#/admin') {
+        if (isAdmin) {
+          setView('admin-dashboard');
+        } else {
+          setView('admin-login');
+        }
+      } else {
+        setView('site');
+      }
+    };
+
+    handleRoute();
+    window.addEventListener('hashchange', handleRoute);
+    return () => window.removeEventListener('hashchange', handleRoute);
+  }, [isAdmin]);
+
+  // Render admin views
+  if (view === 'admin-login') {
+    return <AdminLogin />;
+  }
+
+  if (view === 'admin-dashboard') {
+    if (!isAdmin) {
+      setView('admin-login');
+      return <AdminLogin />;
+    }
+    return <AdminDashboard />;
+  }
+
+  // Render site
   const handleAddToCart = (product: Product, size: string) => {
     setCartItems((prev) => {
       const existingIndex = prev.findIndex(
@@ -59,8 +100,18 @@ export default function App() {
 
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
+  // Get visible pages for navigation
+  const visiblePages = pages.filter((p) => p.isVisible);
+
   return (
-    <div className="min-h-screen bg-white text-black font-sans">
+    <div
+      className="min-h-screen"
+      style={{
+        backgroundColor: theme.backgroundColor,
+        color: theme.textColor,
+        fontFamily: theme.fontFamily,
+      }}
+    >
       {/* Header */}
       <Header
         onCartOpen={() => setCartOpen(true)}
@@ -68,6 +119,7 @@ export default function App() {
         cartCount={cartCount}
         currentPage={currentPage}
         onNavigate={handleNavigate}
+        pages={visiblePages}
       />
 
       {/* Main content */}
@@ -83,7 +135,7 @@ export default function App() {
                 Crafted with Intention
               </h2>
               <p className="text-sm lg:text-base text-gray-600 leading-relaxed max-w-2xl mx-auto">
-                Maison Élan is a British luxury accessories brand founded in 2018. 
+                {siteConfig.siteName} is a British luxury accessories brand founded in 2018. 
                 Our pieces are designed in London and handcrafted by skilled artisans 
                 using the finest Italian leathers. Each bag is a testament to timeless 
                 design and uncompromising quality — created to be cherished for years to come.
@@ -188,7 +240,7 @@ export default function App() {
 
             <div className="space-y-8 text-center">
               <p className="text-base lg:text-lg text-gray-600 leading-relaxed">
-                Maison Élan was founded in 2018 with a singular vision: to create luxury 
+                {siteConfig.siteName} was founded in 2018 with a singular vision: to create luxury 
                 bags that transcend seasons and trends. Based in the heart of London, our 
                 design studio draws inspiration from architecture, art, and the modern woman's 
                 dynamic lifestyle.
@@ -248,6 +300,16 @@ export default function App() {
         onClose={() => setSelectedProduct(null)}
         onAddToCart={handleAddToCart}
       />
+
+      {/* Admin floating button */}
+      {isAdmin && (
+        <a
+          href="#/admin"
+          className="fixed bottom-6 right-6 bg-black text-white px-4 py-2 text-xs tracking-widest uppercase hover:bg-gray-900 transition-colors z-40 shadow-lg"
+        >
+          Admin Panel
+        </a>
+      )}
     </div>
   );
 }
