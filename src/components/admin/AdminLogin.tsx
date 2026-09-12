@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useAdmin } from '../../context/AdminContext';
+import { useContent } from '../../context/ContentContext';
 
 export default function AdminLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const { login } = useAdmin();
+  const { siteConfig } = useContent();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,9 +32,9 @@ export default function AdminLogin() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           </div>
-          <h1 className="text-3xl font-light tracking-wider mb-2">Admin Login</h1>
-          <p className="text-sm text-gray-500">Sign in to manage your website content</p>
-          <p className="text-xs text-gray-400 mt-2">Change your site name, logo, and page title from Site Settings</p>
+          <h1 className="text-3xl font-light tracking-wider mb-2">{siteConfig.siteName}</h1>
+          <p className="text-sm text-gray-500">Admin Login</p>
+          <p className="text-xs text-gray-400 mt-2">Sign in to manage your website content</p>
         </div>
 
         {/* Login Form */}

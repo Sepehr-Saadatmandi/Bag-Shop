@@ -8,7 +8,7 @@ import PageEditor from './PageEditor';
 
 export default function AdminDashboard() {
   const { logout } = useAdmin();
-  const { pages } = useContent();
+  const { pages, siteConfig } = useContent();
   const [activeTab, setActiveTab] = useState('pages');
   const [editingPageId, setEditingPageId] = useState<string | null>(null);
 
@@ -40,7 +40,7 @@ export default function AdminDashboard() {
         <div className="max-w-[1800px] mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <h1 className="text-xl font-light tracking-wider">Admin Dashboard</h1>
-            <span className="text-xs text-gray-400">Maison Élan</span>
+            <span className="text-xs text-gray-400">{siteConfig.siteName}</span>
           </div>
           <div className="flex items-center gap-4">
             <button

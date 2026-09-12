@@ -2,10 +2,12 @@ import { useContent } from '../context/ContentContext';
 
 interface LogoProps {
   size?: 'small' | 'medium' | 'large';
+  colorOverride?: string;
 }
 
-export default function Logo({ size = 'medium' }: LogoProps) {
+export default function Logo({ size = 'medium', colorOverride }: LogoProps) {
   const { siteConfig } = useContent();
+  const logoColor = colorOverride || siteConfig.logoColor;
 
   const sizeClasses = {
     small: 'text-lg',
@@ -33,7 +35,7 @@ export default function Logo({ size = 'medium' }: LogoProps) {
     return (
       <h1
         className={`${sizeClasses[size]} tracking-[0.3em] uppercase font-light`}
-        style={{ color: siteConfig.logoColor }}
+        style={{ color: logoColor }}
       >
         {siteConfig.siteName}
       </h1>
@@ -44,9 +46,9 @@ export default function Logo({ size = 'medium' }: LogoProps) {
   return (
     <div className="flex items-center gap-3">
       <div
-        className={`${iconSizes[size]} flex items-center justify-center rounded-full font-light`}
+        className={`${iconSizes[size]} flex items-center justify-center rounded-full font-light flex-shrink-0`}
         style={{
-          backgroundColor: siteConfig.logoColor,
+          backgroundColor: logoColor,
           color: '#ffffff',
         }}
       >
@@ -55,8 +57,8 @@ export default function Logo({ size = 'medium' }: LogoProps) {
         </span>
       </div>
       <h1
-        className={`${sizeClasses[size]} tracking-[0.3em] uppercase font-light hidden lg:block`}
-        style={{ color: siteConfig.logoColor }}
+        className={`${sizeClasses[size]} tracking-[0.3em] uppercase font-light`}
+        style={{ color: logoColor }}
       >
         {siteConfig.siteName}
       </h1>

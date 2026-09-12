@@ -11,7 +11,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <div className="mb-6">
-              <Logo size="small" />
+              <Logo size="small" colorOverride="#ffffff" />
             </div>
             <p className="text-sm text-gray-400 leading-relaxed">
               Crafting timeless luxury bags since 2018. Each piece is designed in London 
