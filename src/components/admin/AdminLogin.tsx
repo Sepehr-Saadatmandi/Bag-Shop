@@ -32,6 +32,7 @@ export default function AdminLogin() {
           </div>
           <h1 className="text-3xl font-light tracking-wider mb-2">Admin Login</h1>
           <p className="text-sm text-gray-500">Sign in to manage your website content</p>
+          <p className="text-xs text-gray-400 mt-2">Change your site name, logo, and page title from Site Settings</p>
         </div>
 
         {/* Login Form */}

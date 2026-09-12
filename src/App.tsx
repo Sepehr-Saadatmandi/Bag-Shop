@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 import FeaturedSection from './components/FeaturedSection';
 import AdminLogin from './components/admin/AdminLogin';
 import AdminDashboard from './components/admin/AdminDashboard';
+import SiteMetadata from './components/SiteMetadata';
 import { Product } from './data/products';
 
 export default function App() {
@@ -116,6 +117,9 @@ export default function App() {
         fontFamily: theme.fontFamily,
       }}
     >
+      {/* Site Metadata (title and favicon) */}
+      <SiteMetadata />
+
       {/* Header */}
       <Header
         onCartOpen={() => setCartOpen(true)}

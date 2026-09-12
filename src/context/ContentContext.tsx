@@ -36,8 +36,12 @@ export interface ThemeConfig {
 export interface SiteConfig {
   siteName: string;
   logo: string;
+  logoType: 'text' | 'icon' | 'image';
+  logoIcon: string;
+  logoColor: string;
   announcement: string;
   footerText: string;
+  pageTitle: string;
   socialLinks: {
     instagram: string;
     twitter: string;
@@ -74,8 +78,12 @@ const defaultTheme: ThemeConfig = {
 const defaultSiteConfig: SiteConfig = {
   siteName: 'Maison Élan',
   logo: '',
+  logoType: 'icon',
+  logoIcon: 'M',
+  logoColor: '#000000',
   announcement: 'Now shipping worldwide — Complimentary express delivery on orders over $500',
   footerText: '© 2026 Maison Élan. All rights reserved.',
+  pageTitle: 'Maison Élan — Luxury Bags',
   socialLinks: {
     instagram: '#',
     twitter: '#',

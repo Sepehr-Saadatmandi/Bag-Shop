@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useContent } from '../context/ContentContext';
 import { PageContent } from '../context/ContentContext';
+import Logo from './Logo';
 
 interface HeaderProps {
   onCartOpen: () => void;
@@ -69,9 +70,7 @@ export default function Header({ onCartOpen, onSearchOpen, cartCount, currentPag
             onClick={() => onNavigate('home')}
             className="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 lg:mx-auto"
           >
-            <h1 className="text-xl lg:text-2xl tracking-[0.3em] uppercase font-light">
-              {siteConfig.siteName}
-            </h1>
+            <Logo size="medium" />
           </button>
 
           {/* Right icons */}

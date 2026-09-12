@@ -1,4 +1,5 @@
 import { useContent } from '../context/ContentContext';
+import Logo from './Logo';
 
 export default function Footer() {
   const { siteConfig } = useContent();
@@ -9,9 +10,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <h3 className="text-lg tracking-[0.3em] uppercase font-light mb-6">
-              {siteConfig.siteName}
-            </h3>
+            <div className="mb-6">
+              <Logo size="small" />
+            </div>
             <p className="text-sm text-gray-400 leading-relaxed">
               Crafting timeless luxury bags since 2018. Each piece is designed in London 
               and handcrafted by skilled artisans using the finest materials.

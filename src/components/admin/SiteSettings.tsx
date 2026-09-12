@@ -26,6 +26,19 @@ export default function SiteSettings() {
             </div>
 
             <div>
+              <label className="block text-xs text-gray-600 mb-2">Browser Tab Title</label>
+              <input
+                type="text"
+                value={siteConfig.pageTitle}
+                onChange={(e) => updateSiteConfig({ pageTitle: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 text-sm focus:border-black outline-none transition-colors"
+              />
+              <p className="text-xs text-gray-400 mt-1">
+                This appears in the browser tab and search results
+              </p>
+            </div>
+
+            <div>
               <label className="block text-xs text-gray-600 mb-2">Announcement Bar</label>
               <input
                 type="text"
@@ -46,6 +59,129 @@ export default function SiteSettings() {
                 onChange={(e) => updateSiteConfig({ footerText: e.target.value })}
                 className="w-full px-4 py-3 border border-gray-200 text-sm focus:border-black outline-none transition-colors"
               />
+            </div>
+          </div>
+        </div>
+
+        {/* Logo Settings */}
+        <div className="pt-8 border-t border-gray-100">
+          <h3 className="text-sm font-medium mb-4">Logo & Branding</h3>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs text-gray-600 mb-2">Logo Type</label>
+              <select
+                value={siteConfig.logoType}
+                onChange={(e) => updateSiteConfig({ logoType: e.target.value as 'text' | 'icon' | 'image' })}
+                className="w-full px-4 py-3 border border-gray-200 text-sm focus:border-black outline-none transition-colors"
+              >
+                <option value="icon">Icon (Circle with letter)</option>
+                <option value="text">Text Only</option>
+                <option value="image">Image URL</option>
+              </select>
+            </div>
+
+            {siteConfig.logoType === 'icon' && (
+              <>
+                <div>
+                  <label className="block text-xs text-gray-600 mb-2">Logo Icon (Letter or Symbol)</label>
+                  <input
+                    type="text"
+                    value={siteConfig.logoIcon}
+                    onChange={(e) => updateSiteConfig({ logoIcon: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-200 text-sm focus:border-black outline-none transition-colors"
+                    placeholder="M"
+                    maxLength={2}
+                  />
+                  <p className="text-xs text-gray-400 mt-1">
+                    Enter 1-2 characters (e.g., "M", "ME", "★")
+                  </p>
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-600 mb-2">Logo Color</label>
+                  <div className="flex gap-3">
+                    <input
+                      type="color"
+                      value={siteConfig.logoColor}
+                      onChange={(e) => updateSiteConfig({ logoColor: e.target.value })}
+                      className="w-12 h-12 border border-gray-200 cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={siteConfig.logoColor}
+                      onChange={(e) => updateSiteConfig({ logoColor: e.target.value })}
+                      className="flex-1 px-4 py-2 border border-gray-200 text-sm"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
+            {siteConfig.logoType === 'text' && (
+              <div>
+                <label className="block text-xs text-gray-600 mb-2">Text Color</label>
+                <div className="flex gap-3">
+                  <input
+                    type="color"
+                    value={siteConfig.logoColor}
+                    onChange={(e) => updateSiteConfig({ logoColor: e.target.value })}
+                    className="w-12 h-12 border border-gray-200 cursor-pointer"
+                  />
+                  <input
+                    type="text"
+                    value={siteConfig.logoColor}
+                    onChange={(e) => updateSiteConfig({ logoColor: e.target.value })}
+                    className="flex-1 px-4 py-2 border border-gray-200 text-sm"
+                  />
+                </div>
+              </div>
+            )}
+
+            {siteConfig.logoType === 'image' && (
+              <div>
+                <label className="block text-xs text-gray-600 mb-2">Logo Image URL</label>
+                <input
+                  type="text"
+                  value={siteConfig.logo}
+                  onChange={(e) => updateSiteConfig({ logo: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-200 text-sm focus:border-black outline-none transition-colors"
+                  placeholder="https://example.com/logo.png"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Paste a direct link to your logo image (PNG or SVG recommended)
+                </p>
+              </div>
+            )}
+
+            {/* Preview */}
+            <div className="mt-6 p-6 bg-gray-50 rounded border border-gray-200">
+              <p className="text-xs text-gray-600 mb-3">Preview:</p>
+              <div className="flex items-center justify-center">
+                {siteConfig.logoType === 'image' && siteConfig.logo ? (
+                  <img src={siteConfig.logo} alt="Logo" className="h-12 object-contain" />
+                ) : siteConfig.logoType === 'text' ? (
+                  <h1
+                    className="text-2xl tracking-[0.3em] uppercase font-light"
+                    style={{ color: siteConfig.logoColor }}
+                  >
+                    {siteConfig.siteName}
+                  </h1>
+                ) : (
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-12 h-12 flex items-center justify-center rounded-full text-white text-xl"
+                      style={{ backgroundColor: siteConfig.logoColor }}
+                    >
+                      {siteConfig.logoIcon || siteConfig.siteName.charAt(0)}
+                    </div>
+                    <h1
+                      className="text-2xl tracking-[0.3em] uppercase font-light"
+                      style={{ color: siteConfig.logoColor }}
+                    >
+                      {siteConfig.siteName}
+                    </h1>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
