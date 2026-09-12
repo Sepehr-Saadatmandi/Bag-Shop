@@ -12,7 +12,9 @@ export default function AdminLogin() {
     setError('');
 
     if (login(username, password)) {
-      window.location.hash = '#/admin';
+      // Force a page reload to trigger the admin dashboard view
+      // This is needed because the hash is already #/admin
+      window.location.reload();
     } else {
       setError('Invalid credentials. Please try again.');
     }
@@ -65,16 +67,22 @@ export default function AdminLogin() {
           </button>
         </form>
 
-        <div className="mt-6 p-4 bg-gray-50 rounded text-xs text-gray-600">
+        <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded text-xs text-blue-800">
           <p className="font-medium mb-2">Demo Credentials:</p>
-          <p>Username: <code className="bg-white px-2 py-1 rounded">admin</code></p>
-          <p>Password: <code className="bg-white px-2 py-1 rounded">admin123</code></p>
+          <p className="mb-1">Username: <code className="bg-white px-2 py-0.5 rounded border border-blue-100">admin</code></p>
+          <p>Password: <code className="bg-white px-2 py-0.5 rounded border border-blue-100">admin123</code></p>
         </div>
 
         <div className="mt-6 text-center">
-          <a href="#" onClick={(e) => { e.preventDefault(); window.location.hash = ''; }} className="text-sm text-gray-500 hover:text-black transition-colors">
+          <button
+            onClick={() => {
+              window.location.hash = '';
+              window.location.reload();
+            }}
+            className="text-sm text-gray-500 hover:text-black transition-colors"
+          >
             ← Back to Website
-          </a>
+          </button>
         </div>
       </div>
     </div>

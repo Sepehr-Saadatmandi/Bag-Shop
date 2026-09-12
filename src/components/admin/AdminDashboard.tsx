@@ -22,6 +22,17 @@ export default function AdminDashboard() {
     setActiveTab('pages');
   };
 
+  const handleLogout = () => {
+    logout();
+    window.location.hash = '';
+    window.location.reload();
+  };
+
+  const handleViewSite = () => {
+    window.location.hash = '';
+    window.location.reload();
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -32,15 +43,14 @@ export default function AdminDashboard() {
             <span className="text-xs text-gray-400">Maison Élan</span>
           </div>
           <div className="flex items-center gap-4">
-            <a
-              href="#"
-              onClick={(e) => { e.preventDefault(); window.location.hash = ''; }}
+            <button
+              onClick={handleViewSite}
               className="text-sm text-gray-600 hover:text-black transition-colors"
             >
               View Site
-            </a>
+            </button>
             <button
-              onClick={logout}
+              onClick={handleLogout}
               className="text-sm text-gray-600 hover:text-black transition-colors"
             >
               Logout

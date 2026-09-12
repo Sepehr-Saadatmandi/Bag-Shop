@@ -94,7 +94,12 @@ export default function Footer() {
             <span>·</span>
             <span>Terms of Service</span>
             <span>·</span>
-            <a href="#/admin" className="hover:text-white transition-colors">Admin</a>
+            <button
+              onClick={() => { window.location.hash = '#/admin'; }}
+              className="hover:text-white transition-colors cursor-pointer"
+            >
+              Admin
+            </button>
           </div>
         </div>
       </div>

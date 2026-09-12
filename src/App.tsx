@@ -20,41 +20,33 @@ export default function App() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [view, setView] = useState<'site' | 'admin-login' | 'admin-dashboard'>('site');
+  const [showAdmin, setShowAdmin] = useState(false);
   const { isAdmin } = useAdmin();
   const { pages, siteConfig, theme } = useContent();
 
-  // Handle routing
+  // Listen for hash changes to open admin
   useEffect(() => {
-    const handleRoute = () => {
+    const checkHash = () => {
       const hash = window.location.hash;
-      if (hash === '#/admin') {
-        if (isAdmin) {
-          setView('admin-dashboard');
-        } else {
-          setView('admin-login');
-        }
+      if (hash === '#/admin' || hash === '#admin') {
+        setShowAdmin(true);
       } else {
-        setView('site');
+        setShowAdmin(false);
       }
     };
 
-    handleRoute();
-    window.addEventListener('hashchange', handleRoute);
-    return () => window.removeEventListener('hashchange', handleRoute);
-  }, [isAdmin]);
+    checkHash();
+    window.addEventListener('hashchange', checkHash);
+    return () => window.removeEventListener('hashchange', checkHash);
+  }, []);
 
-  // Render admin views
-  if (view === 'admin-login') {
-    return <AdminLogin />;
-  }
-
-  if (view === 'admin-dashboard') {
-    if (!isAdmin) {
-      setView('admin-login');
-      return <AdminLogin />;
+  // If admin is logged in and showAdmin is true, show dashboard
+  // If showAdmin is true but not logged in, show login
+  if (showAdmin) {
+    if (isAdmin) {
+      return <AdminDashboard />;
     }
-    return <AdminDashboard />;
+    return <AdminLogin />;
   }
 
   // Render site
@@ -200,9 +192,7 @@ export default function App() {
               ].map((collection) => (
                 <button
                   key={collection.name}
-                  onClick={() => {
-                    handleNavigate('shop');
-                  }}
+                  onClick={() => handleNavigate('shop')}
                   className="relative group overflow-hidden aspect-[4/3]"
                 >
                   <img
@@ -301,14 +291,16 @@ export default function App() {
         onAddToCart={handleAddToCart}
       />
 
-      {/* Admin floating button */}
+      {/* Admin floating button - only show when logged in */}
       {isAdmin && (
-        <a
-          href="#/admin"
-          className="fixed bottom-6 right-6 bg-black text-white px-4 py-2 text-xs tracking-widest uppercase hover:bg-gray-900 transition-colors z-40 shadow-lg"
+        <button
+          onClick={() => {
+            window.location.hash = '#/admin';
+          }}
+          className="fixed bottom-6 right-6 bg-black text-white px-4 py-2 text-xs tracking-widest uppercase hover:bg-gray-900 transition-colors z-40 shadow-lg cursor-pointer"
         >
           Admin Panel
-        </a>
+        </button>
       )}
     </div>
   );
