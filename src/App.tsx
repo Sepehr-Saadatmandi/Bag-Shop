@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAdmin } from './context/AdminContext';
 import { useContent } from './context/ContentContext';
+import { useUser } from './context/UserContext';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import ProductGrid from './components/ProductGrid';
@@ -12,6 +13,8 @@ import Footer from './components/Footer';
 import FeaturedSection from './components/FeaturedSection';
 import AdminLogin from './components/admin/AdminLogin';
 import AdminDashboard from './components/admin/AdminDashboard';
+import AuthModal from './components/user/AuthModal';
+import UserAccount from './components/user/UserAccount';
 import SiteMetadata from './components/SiteMetadata';
 import { Product } from './data/products';
 
@@ -22,17 +25,25 @@ export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [showAdmin, setShowAdmin] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showAccount, setShowAccount] = useState(false);
   const { isAdmin } = useAdmin();
   const { pages, siteConfig, theme } = useContent();
+  const { user } = useUser();
 
-  // Listen for hash changes to open admin
+  // Listen for hash changes to open admin or account
   useEffect(() => {
     const checkHash = () => {
       const hash = window.location.hash;
       if (hash === '#/admin' || hash === '#admin') {
         setShowAdmin(true);
+        setShowAccount(false);
+      } else if (hash.startsWith('#/account')) {
+        setShowAccount(true);
+        setShowAdmin(false);
       } else {
         setShowAdmin(false);
+        setShowAccount(false);
       }
     };
 
@@ -108,6 +119,51 @@ export default function App() {
   // Get visible pages for navigation
   const visiblePages = pages.filter((p) => p.isVisible);
 
+  // If account page is shown
+  if (showAccount) {
+    if (!user) {
+      // Redirect to login if not authenticated
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <p className="mb-4">Please log in to view your account</p>
+            <button
+              onClick={() => setShowAuthModal(true)}
+              className="bg-black text-white px-8 py-3 text-xs tracking-widest uppercase hover:bg-gray-900 transition-colors"
+            >
+              Sign In
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div
+        className="min-h-screen"
+        style={{
+          backgroundColor: theme.backgroundColor,
+          color: theme.textColor,
+          fontFamily: theme.fontFamily,
+        }}
+      >
+        <SiteMetadata />
+        <Header
+          onCartOpen={() => setCartOpen(true)}
+          onSearchOpen={() => setSearchOpen(true)}
+          cartCount={cartCount}
+          currentPage={currentPage}
+          onNavigate={handleNavigate}
+          pages={visiblePages}
+          onAuthClick={() => setShowAuthModal(true)}
+        />
+        <main className="pt-[72px] lg:pt-[88px]">
+          <UserAccount />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div
       className="min-h-screen"
@@ -128,6 +184,7 @@ export default function App() {
         currentPage={currentPage}
         onNavigate={handleNavigate}
         pages={visiblePages}
+        onAuthClick={() => setShowAuthModal(true)}
       />
 
       {/* Main content */}
@@ -305,6 +362,12 @@ export default function App() {
         product={selectedProduct}
         onClose={() => setSelectedProduct(null)}
         onAddToCart={handleAddToCart}
+      />
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
       />
 
       {/* Admin floating button - always visible for easy access */}
